@@ -22,7 +22,9 @@ long tick;
 long tout;
 int onTmr;
 boolean ttmr = false;
-char keyCode = KEY_F1;      //For the correct code see https://github.com/arduino-libraries/Keyboard/blob/a7abf94998c54f01e879d6c0e3fac3169b4a76c2/src/Keyboard.h#L37
+char keyCode = KEY_LEFT_SHIFT;      //For the correct code see https://github.com/arduino-libraries/Keyboard/blob/a7abf94998c54f01e879d6c0e3fac3169b4a76c2/src/Keyboard.h#L37
+int counter; 
+boolean debug = false;
 
 /* Main */
 
@@ -49,9 +51,6 @@ void setup() {
   digitalWrite(4,HIGH);   
   //TCCR1B = TCCR1B & B11111000 | B00000011;  // 64 for PWM  490.20 Hz (The DEFAULT)
   TCCR1B = TCCR1B & B11111000 | B00000010;  // 1/8 for PWM frequency of  3921.16 Hz
-  analogWrite(10,volume); 
-  delay(100);
-  analogWrite(10,0); 
   delay(5000);     
   Serial.begin(115200);
   Serial.println("Adafruit MMA8451 test!");
@@ -62,6 +61,10 @@ void setup() {
   Serial.println("MMA8451 found!");
   mma.setRange(MMA8451_RANGE_2_G);
   Serial.print("Range = "); Serial.print(2 << mma.getRange());  
+  //Startup sound
+  for(counter = 2;counter <= 50;counter++) {
+    analogWrite(10,counter); delay(20); analogWrite(10,0);  
+  } 
 }
 
 void loop() {
@@ -76,12 +79,16 @@ void loop() {
   }
   average = total / numReadings; //lock average if switch is on
   onTmr++;
- //   Serial.print(average);
- //   Serial.print("    :");
- //   Serial.println(mma.x);
-    
-    if (mma.x < average-80) //switch triggered if < 100 from average
+
+    if (mma.x < average-100) //switch triggered if < 100 from average
     {
+
+   if (debug){
+     Serial.print("avg:");
+     Serial.print(average);
+     Serial.print("    :");
+     Serial.println(mma.x);
+   }  
       delay(20);
       mma.read();       
       if (onTmr <  25)
@@ -89,17 +96,15 @@ void loop() {
           tick=millis(); //say 30,000 in tick                  
           analogWrite(10,volume);   // sound
           digitalWrite(2,LOW);
-          Keyboard.press(keyCode);
+          Keyboard.print(keyCode);
           //Joystick.setButton(0, 1);
-          Serial.println("Press");           
+          if (debug){ Serial.println("Press"); }       
       }
       else
       {
           analogWrite(10,0);
           digitalWrite(2,HIGH);
           //Joystick.setButton(0, 0); 
-          Keyboard.releaseAll();
-          Serial.println("release");           
       }              
     }
       else
@@ -109,8 +114,6 @@ void loop() {
           analogWrite(10,0);
           digitalWrite(2,HIGH);
           //Joystick.setButton(0, 0);
-          Keyboard.releaseAll();
-          Serial.println("release");           
         }
          onTmr = 0;       
 }
