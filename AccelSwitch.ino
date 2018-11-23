@@ -1,7 +1,7 @@
 //******************************************************************
 #include <Wire.h>
-#include <Adafruit_MMA8451.h>
-#include <Adafruit_Sensor.h>
+#include <Adafruit_MMA8451.h> //https://github.com/adafruit/Adafruit_MMA8451_Library
+#include <Adafruit_Sensor.h> //https://github.com/adafruit/Adafruit_Sensor
 #include <Keyboard.h>
 //#include <Joystick.h> // https://github.com/MHeironimus/ArduinoJoystickLibrary
 Adafruit_MMA8451 mma = Adafruit_MMA8451();
