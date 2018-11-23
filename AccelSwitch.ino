@@ -11,7 +11,7 @@ Adafruit_MMA8451 mma = Adafruit_MMA8451();
 
 long avgX;
 const int numReadings = 128;  // multiples of 2^2
-const int volume = 1;        // 128 will be loudest, go down to about 10. 0=Off. 
+const int volume = 1;         // 128 will be loudest, go down to about 10. 0=Off. 
 int readings[numReadings];    // the readings from the analog input
 int readIndex = 0;            // the index of the current reading
 uint32_t total = 0;           // the running total
@@ -24,7 +24,8 @@ int onTmr;
 boolean ttmr = false;
 char keyCode = KEY_LEFT_SHIFT;      //For the correct code see https://github.com/arduino-libraries/Keyboard/blob/a7abf94998c54f01e879d6c0e3fac3169b4a76c2/src/Keyboard.h#L37
 int counter; 
-boolean debug = false;
+boolean debounce = true;
+boolean debug = true;
 
 /* Main */
 
@@ -96,7 +97,13 @@ void loop() {
           tick=millis(); //say 30,000 in tick                  
           analogWrite(10,volume);   // sound
           digitalWrite(2,LOW);
-          Keyboard.print(keyCode);
+          if (debounce) {
+            Keyboard.print(keyCode);
+            onTmr = 26;
+            delay(100);
+          } else {
+            Keyboard.print(keyCode);
+          }
           //Joystick.setButton(0, 1);
           if (debug){ Serial.println("Press"); }       
       }
