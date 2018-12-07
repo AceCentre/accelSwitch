@@ -92,7 +92,7 @@ void loop() {
    }  
       delay(20);
       mma.read();       
-      if (onTmr <  25)
+      if (onTmr <  15)
       {
           tick=millis(); //say 30,000 in tick                  
           analogWrite(10,volume);   // sound
