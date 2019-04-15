@@ -8,27 +8,35 @@ Adafruit_MMA8451 mma = Adafruit_MMA8451();
 // PUT BUZZER ON PIN 10. MMA8451 is then wired to SDA/SCL etc
 //******************************************************************
 
-/* settings */
+/* settings - setup. Dont touch */
 
 long avgX;
 const int numReadings = 128;  // multiples of 2^2
-const int volume = 5;         // 128 will be loudest, go down to about 10. 0=Off. 
 int readings[numReadings];    // the readings from the analog input
 int readIndex = 0;            // the index of the current reading
 uint32_t total = 0;           // the running total
 int average,average2 = 0;
 boolean swOn = false;
+int counter; 
+boolean debounce = true;
+boolean debug = true;
+const int buzzerPin = 10;
 int sensorValue;
 long tick;
 long tout;
 int onTmr;
 boolean ttmr = false;
-char keyCode = KEY_LEFT_SHIFT;      //For the correct code see https://github.com/arduino-libraries/Keyboard/blob/a7abf94998c54f01e879d6c0e3fac3169b4a76c2/src/Keyboard.h#L37
 int counter; 
 boolean debounce = true;
 boolean debug = true;
 const int buzzerPin = 10;
+
+/* settings - user - feel free to edit */ 
+
+char keyCode = KEY_LEFT_SHIFT;      //For the correct code see https://github.com/arduino-libraries/Keyboard/blob/a7abf94998c54f01e879d6c0e3fac3169b4a76c2/src/Keyboard.h#L37
+const int volume = 5;         // 128 will be loudest, go down to about 10. 0=Off. 
 const int sensitivity = average-100;
+
 /* Main */
 
 /*
