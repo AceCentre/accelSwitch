@@ -5,6 +5,7 @@
 #include <Keyboard.h>
 //#include <Joystick.h> // https://github.com/MHeironimus/ArduinoJoystickLibrary
 Adafruit_MMA8451 mma = Adafruit_MMA8451();
+// PUT BUZZER ON PIN 10. MMA8451 is then wired to SDA/SCL etc
 //******************************************************************
 
 /* settings */
@@ -26,6 +27,7 @@ char keyCode = KEY_LEFT_SHIFT;      //For the correct code see https://github.co
 int counter; 
 boolean debounce = true;
 boolean debug = true;
+const int buzzerPin = 10;
 
 /* Main */
 
@@ -46,12 +48,7 @@ void setup() {
   Joystick.setYAxisRange(-1, 1);
 */  
   Keyboard.begin();
-  pinMode(10,OUTPUT);
-  pinMode(2,OUTPUT);
-  pinMode(4,OUTPUT); 
-  digitalWrite(4,HIGH);   
-  //TCCR1B = TCCR1B & B11111000 | B00000011;  // 64 for PWM  490.20 Hz (The DEFAULT)
-  TCCR1B = TCCR1B & B11111000 | B00000010;  // 1/8 for PWM frequency of  3921.16 Hz
+  pinMode(buzzerPin, OUTPUT); // Set buzzer - pin 9 as an output
   delay(5000);     
   Serial.begin(115200);
   Serial.println("Adafruit MMA8451 test!");
@@ -64,7 +61,7 @@ void setup() {
   Serial.print("Range = "); Serial.print(2 << mma.getRange());  
   //Startup sound
   for(counter = 2;counter <= 50;counter++) {
-    analogWrite(10,counter); delay(20); analogWrite(10,0);  
+    analogWrite(buzzerPin,counter); delay(20); analogWrite(10,0);  
   } 
 }
 
@@ -95,7 +92,7 @@ void loop() {
       if (onTmr <  15)
       {
           tick=millis(); //say 30,000 in tick                  
-          analogWrite(10,volume);   // sound
+          analogWrite(buzzerPin,volume);   // sound
           digitalWrite(2,LOW);
           if (debounce) {
             Keyboard.print(keyCode);
@@ -109,7 +106,7 @@ void loop() {
       }
       else
       {
-          analogWrite(10,0);
+          analogWrite(buzzerPin,0);
           digitalWrite(2,HIGH);
           //Joystick.setButton(0, 0); 
       }              
@@ -118,7 +115,7 @@ void loop() {
       {
         if ((millis()-tick )> 250) //must be > 50,000
         {
-          analogWrite(10,0);
+          analogWrite(buzzerPin,0);
           digitalWrite(2,HIGH);
           //Joystick.setButton(0, 0);
         }
