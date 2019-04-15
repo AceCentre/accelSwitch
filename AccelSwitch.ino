@@ -12,7 +12,7 @@ Adafruit_MMA8451 mma = Adafruit_MMA8451();
 
 long avgX;
 const int numReadings = 128;  // multiples of 2^2
-const int volume = 1;         // 128 will be loudest, go down to about 10. 0=Off. 
+const int volume = 5;         // 128 will be loudest, go down to about 10. 0=Off. 
 int readings[numReadings];    // the readings from the analog input
 int readIndex = 0;            // the index of the current reading
 uint32_t total = 0;           // the running total
@@ -28,6 +28,7 @@ int counter;
 boolean debounce = true;
 boolean debug = true;
 const int buzzerPin = 10;
+const int sensitivity = average-100;
 
 /* Main */
 
@@ -78,7 +79,7 @@ void loop() {
   average = total / numReadings; //lock average if switch is on
   onTmr++;
 
-    if (mma.x < average-100) //switch triggered if < 100 from average
+    if (mma.x < sensitivity) //switch triggered if < 100 from average
     {
 
    if (debug){
