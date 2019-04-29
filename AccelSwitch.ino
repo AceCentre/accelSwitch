@@ -26,16 +26,12 @@ long tick;
 long tout;
 int onTmr;
 boolean ttmr = false;
-int counter; 
-boolean debounce = true;
-boolean debug = true;
-const int buzzerPin = 10;
 
 /* settings - user - feel free to edit */ 
 
 char keyCode = KEY_LEFT_SHIFT;      //For the correct code see https://github.com/arduino-libraries/Keyboard/blob/a7abf94998c54f01e879d6c0e3fac3169b4a76c2/src/Keyboard.h#L37
 const int volume = 5;         // 128 will be loudest, go down to about 10. 0=Off. 
-const int sensitivity = average-100;
+const int sensitivity = average-100; // Change this last number. The smaller = more sensitive
 
 /* Main */
 
