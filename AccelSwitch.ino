@@ -82,7 +82,7 @@ void loop() {
   average = total / numReadings; //lock average if switch is on
   onTmr++;
 
-    if (mma.x < sensitivity) //switch triggered if < 100 from average
+    if (average - mma.x > sensitivity) //switch triggered if < 100 from average
     {
 
    if (debug){
