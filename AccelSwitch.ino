@@ -6,7 +6,7 @@
  *                and this presses a key on the keyboard when the acceleration of one or more axis is above a % difference
  *                
  * Changes over v1: v1 had a simple circular buffer. It was ok but a couple of problems existed. It could be too slow to record a change due to the size of the 
- *                    buffer (average would take a while to change). 
+ *                    buffer (average would take a while to change) - and the threshold setting was a tad unreliable. 
  *                  This now uses the MovingAverage library. It gives you much quicker ways of changing the smoothing of the data and thus sensitivity
  *                  Also - setting a threshold wasnt reliable. Now its a % change from the average. 
  *                  This needs testing - but makes sense in a accelerometer where a movement may be occuring slowly down a chair - but you still want to 
@@ -18,10 +18,13 @@
  *                  Do this by turning on debug=true and debugPlot and use with SerialPlot (https://hackaday.io/project/5334-serialplot-realtime-plotting-software)
  *                  to generate live data
  *                  
- *                  Be aware: If you want to really change the sensitivity you have to bear in mind a few things:
+ *                  Be aware: If you want to really change the "sensitivity" you have to bear in mind a few things:
  *                  1. The sample rate. See the delay at the very bottom of this code. Want to make it faster? Lower that delay
  *                  2. The 'MovingAverage averagex(0.3);' lines (and see y, z also). Basically read that comment. Its a co-efficient
- *                  3. Change the % change variable
+ *                  3. Change the threshold % change variable
+ *                  
+ *                  One comment: We could make this simpler by putting a trigger for a acceleration in m/s2. Its certainly an idea. Bear in in mind though its not massively 
+ *                               different. The raw numbers are just converted with a bit of maths. The % change feels better to me. But I could easily be persuaded :) 
  */
 
 //******************************************************************
