@@ -23,6 +23,11 @@
  *                  2. The 'MovingAverage averagex(0.3);' lines (and see y, z also). Basically read that comment. Its a co-efficient
  *                  3. Change the threshold % change variable
  *                  
+ *                  No debounce code in this and you cant really press and hold with an accelerometer. 
+ *                  
+ *                  Oh - one more thing.. This is measuring a change in a positive or Negative change. In the future we could mark a difference in only one direction 
+ *                  (Hint: See the abs() in getDiffValue())
+ *                  
  *                  One comment: We could make this simpler by putting a trigger for a acceleration in m/s2. Its certainly an idea. Bear in in mind though its not massively 
  *                               different. The raw numbers are just converted with a bit of maths. The % change feels better to me. But I could easily be persuaded :) 
  */
@@ -47,7 +52,16 @@ int onTmr;
 boolean debug = true;
 boolean debugPlot = true;
 const int buzzerPin = 10;
-const int threshold = 70; //% CHANGE
+/* For the correct code see http://www.asciitable.com (Use dec column) 
+ *  or for modifiers use https://www.arduino.cc/en/Reference/KeyboardModifiers
+ *  Quick tips. An accent looks for 1: 49 & 2: 50. Space: 32 and Enter: KEY_RETURN
+ *  
+ *  Note too - you will have to add debounce stuff to your aac software. This doesnt do it yet
+ *  
+  */
+char keyCode = KEY_F1;      
+const int volume = 5;         // 128 will be loudest, go down to about 10. 0=Off. 
+const int threshold = 20; //% Change. Note - it can go above 100% :) 
 boolean measurex = true;
 boolean measurey = false;
 boolean measurez = false;
@@ -64,14 +78,10 @@ boolean measurez = false;
 MovingAverage averagex(0.3);
 MovingAverage averagey(0.3);
 MovingAverage averagez(0.3); 
-
-/* settings - setup. Dont touch */
-char keyCode = KEY_F1;      //For the correct code see http://www.asciitable.com (Use dec column) or for modifiers use https://www.arduino.cc/en/Reference/KeyboardModifiers 
-const int volume = 5;         // 128 will be loudest, go down to about 10. 0=Off. 
-
 /* Function defines what happens when a switch is on */
 void turnOnSwitch(){
   swOn = true;
+  Keyboard.print(keyCode);
   analogWrite(buzzerPin,volume);   // sound
 }
 
@@ -160,7 +170,7 @@ void loop() {
         }
       } else  {
       
-        if (measurex && diffx <= float(threshold)) {
+        if (measurex && diffx > float(threshold)) {
           if (debug && debugPlot == false ){ Serial.println("Turning on x"); }
           turnOnSwitch();
         }
